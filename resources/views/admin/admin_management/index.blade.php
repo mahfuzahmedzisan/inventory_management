@@ -36,7 +36,9 @@
                     <i class="icon-options-vertical"></i>
                   </a>
                   <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#">Edit</a></li>
+                    <li><a class="dropdown-item" href="{{route('admin.edit', encrypt($admin->id))}}">{{__("Edit")}}</a></li>
+                    <li><a class="dropdown-item" href="#">{{__('Update')}}</a></li>
+                    <li><a class="dropdown-item" href="#">{{__('Delete')}}</a></li>
                   </ul>
                 </div>
               </td>

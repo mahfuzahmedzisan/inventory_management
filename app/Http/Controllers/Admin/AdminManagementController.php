@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AdminRequest;
 use App\Models\User;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class AdminManagementController extends Controller
@@ -11,7 +14,7 @@ class AdminManagementController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): View
     {
         $data["admins"] = User::latest()->get();
         return view('admin.admin_management.index', $data);
@@ -20,7 +23,7 @@ class AdminManagementController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View
     {
         return view('admin.admin_management.create');
     }
@@ -28,7 +31,7 @@ class AdminManagementController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(AdminRequest  $request): RedirectResponse
     {
         $new_admin = new User();
         $new_admin->name = $request->name;
@@ -51,17 +54,25 @@ class AdminManagementController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $id): View
     {
-        //
+        $data["admin"] = User::findOrFail(decrypt($id));
+        return view('admin.admin_management.edit', $data);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(AdminRequest $request, string $id): RedirectResponse
     {
-        //
+        $admin = User::findOrFail(decrypt($id));
+        $admin->name = $request->name;
+        $admin->email = $request->email;
+        if ($request->password) {
+            $admin->password = $request->password;
+        }
+        $admin->save();
+        return redirect()->route('admin.index');
     }
 
     /**

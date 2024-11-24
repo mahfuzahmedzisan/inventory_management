@@ -22,7 +22,7 @@ class AdminRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|min:3|max:25',
+            'name' => 'required|string|min:3|max:30',
         ] + (
             $this->isMethod('POST') ? $this->store() : $this->update()
         );
@@ -31,14 +31,14 @@ class AdminRequest extends FormRequest
     {
         return [
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|confirmed|min:8|string',
+            'password' => 'required|confirmed|min:8|string|confirmed',
         ];
     }
     protected function update(): array
     {
         return [
-            'email' => 'required|email|unique:users,email' . decrypt($this->route('admin')),
-            'password' => 'nullable|confirmed|min:8|string',
+            'email' => 'required|email|unique:users,email,' . decrypt($this->route('admin')),
+            'password' => 'nullable|confirmed|min:8|string|confirmed',
         ];
     }
 }
